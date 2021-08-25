@@ -46,5 +46,17 @@ namespace TestTask.Controllers
 
             return Json(data.ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
         }
+
+        [HttpPost]
+        public ActionResult Upload(HttpPostedFileBase upload)
+        {
+            if (upload != null)
+            {
+                string fileName = System.IO.Path.GetFileName(upload.FileName);
+                //saving file on server
+                upload.SaveAs(Server.MapPath("~/Files/" + fileName));
+            }
+            return RedirectToAction("Index");
+        }
     }
 }
