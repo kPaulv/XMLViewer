@@ -56,7 +56,25 @@
     <input type="submit" value="Загрузить" />
 }
 
+
 <div class="text-center">
+    <h2>Kendo UI Grid</h2>
+    @(Html.Kendo().Grid<TestTask.Models.Card>()
+            .Name("grid")
+            .Columns(columns =>
+            {
+                columns.Bound(c => c.Id).Width(100);
+                columns.Bound(c => c.Bills).Width(300);
+                columns.Bound(c => c.Amount).Width(100);
+            })
+            .DataSource(dataSource => dataSource
+                .Ajax()
+                .Read(read => read.Action("Select", "Home"))
+            )
+        )
+</div>
+
+@*<div class="text-center">
     <h2>Kendo UI Grid</h2>
     @(Html.Kendo().Grid<TestTask.Models.Product>()
             .Name("grid")
@@ -72,4 +90,4 @@
                 .Read(read => read.Action("Select", "Home"))
             )
         )
-</div>
+</div>*@

@@ -36,17 +36,33 @@ namespace TestTask.Controllers
 
         public ActionResult Select([DataSourceRequest] DataSourceRequest request)
         {
-            var data = Enumerable.Range(1, 10)
-                .Select(index => new Product
-                {
-                    ProductID = index,
-                    ProductName = "Product #" + index,
-                    UnitPrice = index * 10,
-                    Discontinued = false
-                });
+            //var data = Enumerable.Range(1, 10)
+            //    .Select(index => new Product
+            //    {
+            //        ProductID = index,
+            //        ProductName = "Product #" + index,
+            //        UnitPrice = index * 10,
+            //        Discontinued = false
+            //    });
+
+            var data = db.Cards;
 
             return Json(data.ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
         }
+
+        //public ActionResult Select([DataSourceRequest] DataSourceRequest request)
+        //{
+        //    var data = Enumerable.Range(1, 10)
+        //        .Select(index => new Product
+        //        {
+        //            ProductID = index,
+        //            ProductName = "Product #" + index,
+        //            UnitPrice = index * 10,
+        //            Discontinued = false
+        //        });
+
+        //    return Json(data.ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
+        //}
 
         [HttpPost]
         public ActionResult Upload(HttpPostedFileBase upload)
