@@ -15,6 +15,7 @@ namespace TestTask.Controllers
     public class HomeController : Controller
     {
         CardContext db = new CardContext();
+        string errorMessage = "";
         public ActionResult Index()
         {
             return View(/*db.Cards*/);
@@ -22,6 +23,7 @@ namespace TestTask.Controllers
 
         public ActionResult ValidationError()
         {
+            ViewBag.ErrorMessage = errorMessage;
             return View();
         }
 
@@ -140,6 +142,7 @@ namespace TestTask.Controllers
             {
                 string msg = "Validation error: ";
                 msg += e.Message;
+                errorMessage = msg;
                 return RedirectToAction("ValidationError");
             }
             

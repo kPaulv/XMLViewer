@@ -235,6 +235,7 @@
     </Compile>
     <Compile Include="Models\Card.cs" />
     <Compile Include="Models\CardContext.cs" />
+    <Compile Include="Models\Error.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -3573,6 +3574,7 @@
     <Content Include="Scripts\kendo\2021.2.616\cultures\kendo.culture.aa-ET.min.js.map" />
     <Content Include="Scripts\kendo\2021.2.616\cultures\kendo.culture.aa-ER.min.js.map" />
     <Content Include="Scripts\kendo\2021.2.616\cultures\kendo.culture.aa-DJ.min.js.map" />
+    <Content Include="Views\Home\ValidationError.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Files\" />
