@@ -67,7 +67,7 @@ namespace TestTask.Controllers
         protected override void Dispose(bool disposing)
         {
             db.Dispose();
-            base.Dispose(disposing)
+            base.Dispose(disposing);
         }
     }
 }
