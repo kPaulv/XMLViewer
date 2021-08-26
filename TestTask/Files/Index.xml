@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<cards>
+  <card>
+    <bills>904556547871PB87</bills>
+    <amout>10.07</amout>
+  </card>
+  <card>
+    <bills>904556547871PM86</bills>
+    <amout>28.00</amout>
+  </card>
+  <card>
+    <bills>904556547871TS87</bills>
+    <amout>22.01</amout>
+  </card>
+</cards>
