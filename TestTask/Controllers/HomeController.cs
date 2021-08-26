@@ -20,6 +20,11 @@ namespace TestTask.Controllers
             return View(/*db.Cards*/);
         }
 
+        public ActionResult ValidationError(string error)
+        {
+            return View(error);
+        }
+
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
@@ -44,76 +49,100 @@ namespace TestTask.Controllers
         [HttpPost]
         public ActionResult Upload(HttpPostedFileBase upload)
         {
-            if (upload != null)
+            try
             {
-                string fileName = System.IO.Path.GetFileName(upload.FileName);
-                if(fileName.Substring(fileName.Length - 4).Equals(".xml"))
+                if (upload != null)
                 {
-                    XmlReader reader = XmlReader.Create(upload.InputStream);
-                    reader.MoveToContent();
-                    string tempBills = "";
-                    double tempAmount = 0.0;
-
-                    XmlDocument xDoc = new XmlDocument();
-                    xDoc.Load(reader);
-                    XmlElement xRoot = xDoc.DocumentElement;
-
-                    string billsPattern = "[A-Z0-9]+";
-                    string amountPattern = "[0-9]+";
-                    string[] tokens;
-
-                    List<Card> cardList = new List<Card>();
-
-                    foreach (XmlNode xNode in xRoot)
+                    string fileName = System.IO.Path.GetFileName(upload.FileName);
+                    if (fileName.Substring(fileName.Length - 4).Equals(".xml"))
                     {
-                        // iterating through child nodes of a card element
-                        foreach (XmlNode childNode in xNode.ChildNodes)
+                        XmlReader reader = XmlReader.Create(upload.InputStream);
+                        reader.MoveToContent();
+                        string tempBills = "";
+                        double tempAmount = 0.0;
+
+                        XmlDocument xDoc = new XmlDocument();
+                        xDoc.Load(reader);
+                        XmlElement xRoot = xDoc.DocumentElement;
+
+                        string billsPattern = "[A-Z0-9]+";
+                        string amountPattern = "[0-9]+";
+                        string[] tokens;
+
+                        List<Card> cardList = new List<Card>();
+
+                        foreach (XmlNode xNode in xRoot)
                         {
-                            // for bills node
-                            if (childNode.Name == "bills")
+                            // iterating through child nodes of a card element
+                            foreach (XmlNode childNode in xNode.ChildNodes)
                             {
-                                
-                                if(childNode.InnerText.Length == 16 && Regex.IsMatch(childNode.InnerText, 
-                                    billsPattern, RegexOptions.IgnoreCase))
+                                // for bills node
+                                if (childNode.Name == "bills")
                                 {
-                                    tempBills = childNode.InnerText;
-                                }                
-                            }
-                            // for amount node
-                            if (childNode.Name == "amout")
-                            {
-                                if(Regex.IsMatch(childNode.InnerText, amountPattern))
-                                {
-                                    tokens = childNode.InnerText.Split('.');
-                                    int fracPartLength = tokens.Length > 1 ? tokens[1].Length : 0;
-                                    if (fracPartLength <= 2)
+
+                                    if (childNode.InnerText.Length == 16 && Regex.IsMatch(childNode.InnerText,
+                                        billsPattern, RegexOptions.IgnoreCase))
                                     {
-                                        bool success = Double.TryParse(childNode.InnerText, NumberStyles.Number, 
-                                                                       CultureInfo.InvariantCulture, out tempAmount);
+                                        tempBills = childNode.InnerText;
+                                    } else
+                                    {
+                                        throw new FormatException("Wrong bills format.");
                                     }
                                 }
-                               
+                                // for amount node
+                                if (childNode.Name == "amout")
+                                {
+                                    if (Regex.IsMatch(childNode.InnerText, amountPattern))
+                                    {
+                                        tokens = childNode.InnerText.Split('.');
+                                        int fracPartLength = tokens.Length > 1 ? tokens[1].Length : 0;
+                                        if (fracPartLength <= 2)
+                                        {
+                                            bool success = Double.TryParse(childNode.InnerText, NumberStyles.Number,
+                                                                           CultureInfo.InvariantCulture, out tempAmount);
+                                        } else
+                                        {
+                                            throw new FormatException("Wrong amount format.");
+                                        }
+                                    } else
+                                    {
+                                        throw new FormatException("Wrong amount format.");
+                                    }
+                                }
                             }
+
+                            cardList.Add(new Card
+                            {
+                                Bills = tempBills,
+                                Amount = tempAmount
+                            });
                         }
 
-                        cardList.Add(new Card
+                        foreach (Card card in cardList)
                         {
-                            Bills = tempBills,
-                            Amount = tempAmount
-                        });
-                    }
-
-                    foreach(Card card in cardList)
+                            db.Cards.Add(card);
+                            db.SaveChanges();
+                        }
+                        //saving file on server
+                        upload.SaveAs(Server.MapPath("~/Files/" + fileName));
+                    } else
                     {
-                        db.Cards.Add(card);
-                        db.SaveChanges();
+                        throw new FormatException("Wrong file format.");
                     }
-                    //saving file on server
-                    upload.SaveAs(Server.MapPath("~/Files/" + fileName));
                 }
-                
+                else
+                {
+                    throw new FormatException("Upload is null.");
+                }
+
+                return RedirectToAction("Index");
+            } catch (Exception e)
+            {
+                string msg = "Validation error: ";
+                msg += e.Message;
+                return RedirectToAction("ValidationError", msg);
             }
-            return RedirectToAction("Index");
+            
         }
 
         protected override void Dispose(bool disposing)
