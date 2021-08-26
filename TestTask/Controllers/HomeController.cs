@@ -14,9 +14,10 @@ namespace TestTask.Controllers
 {
     public class HomeController : Controller
     {
+        CardContext db = new CardContext();
         public ActionResult Index()
         {
-            return View();
+            return View(/*db.Cards*/);
         }
 
         public ActionResult About()
@@ -57,6 +58,12 @@ namespace TestTask.Controllers
                 upload.SaveAs(Server.MapPath("~/Files/" + fileName));
             }
             return RedirectToAction("Index");
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            db.Dispose();
+            base.Dispose(disposing)
         }
     }
 }
