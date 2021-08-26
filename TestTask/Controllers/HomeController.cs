@@ -140,7 +140,7 @@ namespace TestTask.Controllers
             {
                 string msg = "Validation error: ";
                 msg += e.Message;
-                return RedirectToAction("Index"/*"ValidationError"*/);
+                return RedirectToAction("ValidationError");
             }
             
         }
