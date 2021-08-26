@@ -54,8 +54,12 @@ namespace TestTask.Controllers
             if (upload != null)
             {
                 string fileName = System.IO.Path.GetFileName(upload.FileName);
-                //saving file on server
-                upload.SaveAs(Server.MapPath("~/Files/" + fileName));
+                if(fileName.Substring(fileName.Length - 4).Equals(".xml"))
+                {
+                    //saving file on server
+                    upload.SaveAs(Server.MapPath("~/Files/" + fileName));
+                }
+                
             }
             return RedirectToAction("Index");
         }
