@@ -36,33 +36,10 @@ namespace TestTask.Controllers
 
         public ActionResult Select([DataSourceRequest] DataSourceRequest request)
         {
-            //var data = Enumerable.Range(1, 10)
-            //    .Select(index => new Product
-            //    {
-            //        ProductID = index,
-            //        ProductName = "Product #" + index,
-            //        UnitPrice = index * 10,
-            //        Discontinued = false
-            //    });
-
             var data = db.Cards;
 
             return Json(data.ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
         }
-
-        //public ActionResult Select([DataSourceRequest] DataSourceRequest request)
-        //{
-        //    var data = Enumerable.Range(1, 10)
-        //        .Select(index => new Product
-        //        {
-        //            ProductID = index,
-        //            ProductName = "Product #" + index,
-        //            UnitPrice = index * 10,
-        //            Discontinued = false
-        //        });
-
-        //    return Json(data.ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
-        //}
 
         [HttpPost]
         public ActionResult Upload(HttpPostedFileBase upload)
@@ -72,12 +49,10 @@ namespace TestTask.Controllers
                 string fileName = System.IO.Path.GetFileName(upload.FileName);
                 if(fileName.Substring(fileName.Length - 4).Equals(".xml"))
                 {
-                    //saving file on server
                     XmlReader reader = XmlReader.Create(upload.InputStream);
                     reader.MoveToContent();
                     string tempBills = "";
                     double tempAmount = 0.0;
-                    //string tempAmountString = "";
 
                     XmlDocument xDoc = new XmlDocument();
                     xDoc.Load(reader);
@@ -91,10 +66,10 @@ namespace TestTask.Controllers
 
                     foreach (XmlNode xNode in xRoot)
                     {
-                        // обходим все дочерние узлы элемента card
+                        // iterating through child nodes of a card element
                         foreach (XmlNode childNode in xNode.ChildNodes)
                         {
-                            // если узел: bills
+                            // for bills node
                             if (childNode.Name == "bills")
                             {
                                 
@@ -104,7 +79,7 @@ namespace TestTask.Controllers
                                     tempBills = childNode.InnerText;
                                 }                
                             }
-                            // если узел: amount
+                            // for amount node
                             if (childNode.Name == "amout")
                             {
                                 if(Regex.IsMatch(childNode.InnerText, amountPattern))
@@ -113,8 +88,8 @@ namespace TestTask.Controllers
                                     int fracPartLength = tokens.Length > 1 ? tokens[1].Length : 0;
                                     if (fracPartLength <= 2)
                                     {
-                                        //tempAmountString = childNode.InnerText;
-                                        bool success = Double.TryParse(childNode.InnerText, NumberStyles.Number, CultureInfo.InvariantCulture, out tempAmount);//Convert.ToDouble(childNode.InnerText);
+                                        bool success = Double.TryParse(childNode.InnerText, NumberStyles.Number, 
+                                                                       CultureInfo.InvariantCulture, out tempAmount);
                                     }
                                 }
                                
@@ -126,8 +101,6 @@ namespace TestTask.Controllers
                             Bills = tempBills,
                             Amount = tempAmount
                         });
-
-                        //Console.WriteLine();
                     }
 
                     foreach(Card card in cardList)
@@ -135,7 +108,7 @@ namespace TestTask.Controllers
                         db.Cards.Add(card);
                         db.SaveChanges();
                     }
-
+                    //saving file on server
                     upload.SaveAs(Server.MapPath("~/Files/" + fileName));
                 }
                 
