@@ -84,7 +84,6 @@ namespace TestTask.Controllers
                                     billsPattern, RegexOptions.IgnoreCase))
                                 {
                                     tempBills = childNode.InnerText;
-                                    //Console.WriteLine($"bills: {childNode.InnerText}");
                                 }                
                             }
                             // если узел: amount
@@ -99,8 +98,7 @@ namespace TestTask.Controllers
                                         tempAmount = Convert.ToDouble(childNode.InnerText);
                                     }
                                 }
-                                
-                                //Console.WriteLine($"amount: {childNode.InnerText}");
+                               
                             }
                         }
 
@@ -119,38 +117,6 @@ namespace TestTask.Controllers
                         db.SaveChanges();
                     }
 
-                    //while(reader.Read())
-                    //{
-                    //    if(reader.NodeType == XmlNodeType.Text)
-                    //    {
-                    //        if (reader.Name.Equals("bills"))
-                    //        {
-                    //            tempBills = reader.Value;
-                    //            Console.WriteLine(reader.Value);
-                    //        }
-                    //        if(reader.Name.Equals("amount"))
-                    //        {
-                    //            tempAmount = Convert.ToDouble(reader.Value);
-                    //            Console.WriteLine(reader.Value);
-                    //        }
-                    //    }
-                    //    //switch(reader.NodeType)
-                    //    //{
-                    //    //    case XmlNodeType.Element:
-                    //    //        Console.WriteLine("Start Element {0}", reader.Name);
-                    //    //        break;
-                    //    //    case XmlNodeType.Text:
-                    //    //        Console.WriteLine("Text Node: {0}");
-                    //    //        break;
-                    //    //    case XmlNodeType.EndElement:
-                    //    //        Console.WriteLine("End Element {0}", reader.Name);
-                    //    //        break;
-                    //    //    default:
-                    //    //        Console.WriteLine("Other node {0} with value {1}",
-                    //    //            reader.NodeType, reader.Value);
-                    //    //        break;
-                    //    //}
-                    //}
                     upload.SaveAs(Server.MapPath("~/Files/" + fileName));
                 }
                 
