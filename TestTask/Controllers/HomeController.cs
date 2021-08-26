@@ -7,6 +7,7 @@ using TestTask.Models;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using System.Xml;
+using System.Text.RegularExpressions;
 
 namespace TestTask.Controllers
 {
@@ -64,20 +65,40 @@ namespace TestTask.Controllers
                     xDoc.Load(reader);
                     XmlElement xRoot = xDoc.DocumentElement;
 
-                    foreach (XmlNode xnode in xRoot)
+                    string billsPattern = "[A-Z0-9]+";
+                    string amountPattern = "[0-9]+";
+                    string[] tokens;
+
+                    foreach (XmlNode xNode in xRoot)
                     {
                         // обходим все дочерние узлы элемента card
-                        foreach (XmlNode childnode in xnode.ChildNodes)
+                        foreach (XmlNode childNode in xNode.ChildNodes)
                         {
                             // если узел: bills
-                            if (childnode.Name == "bills")
+                            if (childNode.Name == "bills")
                             {
-                                Console.WriteLine($"bills: {childnode.InnerText}");
+                                
+                                if(childNode.InnerText.Length == 16 && Regex.IsMatch(childNode.InnerText, 
+                                    billsPattern, RegexOptions.IgnoreCase))
+                                {
+                                    tempBills = childNode.InnerText;
+                                    //Console.WriteLine($"bills: {childNode.InnerText}");
+                                }                
                             }
                             // если узел: amount
-                            if (childnode.Name == "amount")
+                            if (childNode.Name == "amount")
                             {
-                                Console.WriteLine($"amount: {childnode.InnerText}");
+                                if(Regex.IsMatch(childNode.InnerText, amountPattern))
+                                {
+                                    tokens = childNode.InnerText.Split('.');
+                                    int fracPartLength = tokens.Length > 1 ? tokens[1].Length : 0;
+                                    if (fracPartLength <= 2)
+                                    {
+                                        tempAmount = Convert.ToDouble(childNode.InnerText);
+                                    }
+                                }
+                                
+                                //Console.WriteLine($"amount: {childNode.InnerText}");
                             }
                         }
                         Console.WriteLine();
