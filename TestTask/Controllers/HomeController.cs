@@ -55,6 +55,66 @@ namespace TestTask.Controllers
                 if(fileName.Substring(fileName.Length - 4).Equals(".xml"))
                 {
                     //saving file on server
+                    XmlReader reader = XmlReader.Create(upload.InputStream);
+                    reader.MoveToContent();
+                    string tempBills;
+                    double tempAmount;
+
+                    XmlDocument xDoc = new XmlDocument();
+                    xDoc.Load(reader);
+                    XmlElement xRoot = xDoc.DocumentElement;
+
+                    foreach (XmlNode xnode in xRoot)
+                    {
+                        // обходим все дочерние узлы элемента card
+                        foreach (XmlNode childnode in xnode.ChildNodes)
+                        {
+                            // если узел: bills
+                            if (childnode.Name == "bills")
+                            {
+                                Console.WriteLine($"bills: {childnode.InnerText}");
+                            }
+                            // если узел: amount
+                            if (childnode.Name == "amount")
+                            {
+                                Console.WriteLine($"amount: {childnode.InnerText}");
+                            }
+                        }
+                        Console.WriteLine();
+                    }
+
+                    //while(reader.Read())
+                    //{
+                    //    if(reader.NodeType == XmlNodeType.Text)
+                    //    {
+                    //        if (reader.Name.Equals("bills"))
+                    //        {
+                    //            tempBills = reader.Value;
+                    //            Console.WriteLine(reader.Value);
+                    //        }
+                    //        if(reader.Name.Equals("amount"))
+                    //        {
+                    //            tempAmount = Convert.ToDouble(reader.Value);
+                    //            Console.WriteLine(reader.Value);
+                    //        }
+                    //    }
+                    //    //switch(reader.NodeType)
+                    //    //{
+                    //    //    case XmlNodeType.Element:
+                    //    //        Console.WriteLine("Start Element {0}", reader.Name);
+                    //    //        break;
+                    //    //    case XmlNodeType.Text:
+                    //    //        Console.WriteLine("Text Node: {0}");
+                    //    //        break;
+                    //    //    case XmlNodeType.EndElement:
+                    //    //        Console.WriteLine("End Element {0}", reader.Name);
+                    //    //        break;
+                    //    //    default:
+                    //    //        Console.WriteLine("Other node {0} with value {1}",
+                    //    //            reader.NodeType, reader.Value);
+                    //    //        break;
+                    //    //}
+                    //}
                     upload.SaveAs(Server.MapPath("~/Files/" + fileName));
                 }
                 
