@@ -8,6 +8,7 @@ using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using System.Xml;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace TestTask.Controllers
 {
@@ -60,6 +61,7 @@ namespace TestTask.Controllers
                     reader.MoveToContent();
                     string tempBills = "";
                     double tempAmount = 0.0;
+                    //string tempAmountString = "";
 
                     XmlDocument xDoc = new XmlDocument();
                     xDoc.Load(reader);
@@ -87,7 +89,7 @@ namespace TestTask.Controllers
                                 }                
                             }
                             // если узел: amount
-                            if (childNode.Name == "amount")
+                            if (childNode.Name == "amout")
                             {
                                 if(Regex.IsMatch(childNode.InnerText, amountPattern))
                                 {
@@ -95,7 +97,8 @@ namespace TestTask.Controllers
                                     int fracPartLength = tokens.Length > 1 ? tokens[1].Length : 0;
                                     if (fracPartLength <= 2)
                                     {
-                                        tempAmount = Convert.ToDouble(childNode.InnerText);
+                                        //tempAmountString = childNode.InnerText;
+                                        bool success = Double.TryParse(childNode.InnerText, NumberStyles.Number, CultureInfo.InvariantCulture, out tempAmount);//Convert.ToDouble(childNode.InnerText);
                                     }
                                 }
                                
