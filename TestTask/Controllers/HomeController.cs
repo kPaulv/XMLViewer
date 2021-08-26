@@ -58,8 +58,8 @@ namespace TestTask.Controllers
                     //saving file on server
                     XmlReader reader = XmlReader.Create(upload.InputStream);
                     reader.MoveToContent();
-                    string tempBills;
-                    double tempAmount;
+                    string tempBills = "";
+                    double tempAmount = 0.0;
 
                     XmlDocument xDoc = new XmlDocument();
                     xDoc.Load(reader);
@@ -68,6 +68,8 @@ namespace TestTask.Controllers
                     string billsPattern = "[A-Z0-9]+";
                     string amountPattern = "[0-9]+";
                     string[] tokens;
+
+                    List<Card> cardList = new List<Card>();
 
                     foreach (XmlNode xNode in xRoot)
                     {
@@ -101,7 +103,20 @@ namespace TestTask.Controllers
                                 //Console.WriteLine($"amount: {childNode.InnerText}");
                             }
                         }
-                        Console.WriteLine();
+
+                        cardList.Add(new Card
+                        {
+                            Bills = tempBills,
+                            Amount = tempAmount
+                        });
+
+                        //Console.WriteLine();
+                    }
+
+                    foreach(Card card in cardList)
+                    {
+                        db.Cards.Add(card);
+                        db.SaveChanges();
                     }
 
                     //while(reader.Read())
