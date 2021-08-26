@@ -235,7 +235,6 @@
     </Compile>
     <Compile Include="Models\Card.cs" />
     <Compile Include="Models\CardContext.cs" />
-    <Compile Include="Models\Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
