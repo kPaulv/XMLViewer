@@ -20,9 +20,9 @@ namespace TestTask.Controllers
             return View(/*db.Cards*/);
         }
 
-        public ActionResult ValidationError(string error)
+        public ActionResult ValidationError()
         {
-            return View(error);
+            return View();
         }
 
         public ActionResult About()
@@ -140,7 +140,7 @@ namespace TestTask.Controllers
             {
                 string msg = "Validation error: ";
                 msg += e.Message;
-                return RedirectToAction("ValidationError", msg);
+                return RedirectToAction("Index"/*"ValidationError"*/);
             }
             
         }
